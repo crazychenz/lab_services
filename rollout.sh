@@ -2,7 +2,6 @@
 # This script is run from act_runner with the following cmd:
 # ssh -p 2222 -o StrictHostKeyChecking=no cicd@www.lab /bin/sh < rollout.sh
 
-
 NOKNOWNHOSTS="-o UserKnownHostsFile=/dev/null"
 NOHOSTCHECKS="-o StrictHostKeyChecking=no"
 export GIT_SSH_COMMAND="ssh $NOKNOWNHOSTS $NOHOSTCHECKS"
