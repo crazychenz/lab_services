@@ -1,5 +1,6 @@
 services:
   system_manual_svc:
     image: git.lab/lab/system_manual:latest
+    container_name: system_manual_svc
     ports: [ "127.0.0.1:1280:80" ]
     restart: unless-stopped
