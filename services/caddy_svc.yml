@@ -6,7 +6,7 @@ services:
       dnsmasq_svc: { condition: service_started }
     container_name: caddy_svc
     build: 
-      context: context
+      context: ../contexts/caddy_svc
       dockerfile_inline: |
         FROM caddy:alpine
         

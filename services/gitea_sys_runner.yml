@@ -7,7 +7,7 @@ services:
     image: git.lab/lab/act_runner:latest
     depends_on: [dnsmasq_svc, caddy_svc, gitea_svc]
     build:
-      context: context
+      #context: 
       dockerfile_inline: |
         FROM gitea/act_runner:latest-dind-rootless
         USER root

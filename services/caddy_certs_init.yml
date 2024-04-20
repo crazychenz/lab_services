@@ -3,7 +3,7 @@ services:
     image: git.lab/lab/caddy:certs_init
     container_name: caddy_certs_init
     build: 
-      context: context
+      #context: 
       dockerfile_inline: |
         FROM caddy:alpine
         

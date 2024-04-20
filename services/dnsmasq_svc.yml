@@ -4,7 +4,7 @@ services:
     depends_on: []
     container_name: dnsmasq_svc
     build:
-      context: context
+      #context: 
       dockerfile_inline: |
         FROM alpine:3.19
         RUN apk add -U dnsmasq
