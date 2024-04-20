@@ -10,7 +10,7 @@ include:
   # Primary Baseline Services
   - initial-docker-compose.yml
 
-  # Secondary Baseline Services
-  - services/system_manual_svc.yml
+  # Upstream Baseline Services
+  - upstream-docker-compose.yml
 
   # Security Services

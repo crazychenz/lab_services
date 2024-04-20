@@ -40,15 +40,15 @@ case $DO_CMD in
     ;;
 
   pull)
-    docker compose pull
+    docker compose -f upstream-docker-compose.yml pull
     ;;
   
   build)
-    docker compose build
+    docker compose -f initial-docker-compose.yml build
     ;;
   
   initial)
-    docker compose -f initial-docker-compose.yml build
+    ./do build
     docker compose -f initial-docker-compose.yml up -d
     ;;
 
@@ -56,7 +56,7 @@ case $DO_CMD in
     # Update any service descriptor updates.
     git pull
     # Note: You must manually do a docker login for
-    ./do pull && ./do start
+    ./do build && ./do pull && ./do start
     # Optional commands for cleaner (or more aggressive) maintenance.
     # docker compose up --force-recreate --build -d
     # docker image prune -f

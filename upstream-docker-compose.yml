@@ -1,0 +1,3 @@
+include:
+  # Secondary Baseline Services
+  - services/system_manual_svc.yml
