@@ -56,7 +56,7 @@ case $DO_CMD in
     # Update any service descriptor updates.
     git pull
     # Note: You must manually do a docker login for
-    ./do build && ./do pull && ./do restart
+    ./do build && ./do pull && ./do start
     # Optional commands for cleaner (or more aggressive) maintenance.
     # docker compose up --force-recreate --build -d
     # docker image prune -f
