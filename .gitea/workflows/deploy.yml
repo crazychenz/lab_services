@@ -1,0 +1,32 @@
+name: manuals
+run-name: ${{ gitea.actor }} is building lab/manuals image.
+
+on:
+  push: 
+    branches: [deploy]
+
+jobs:
+  build-oci:
+    runs-on: [system]
+    steps:
+
+    - name: Check out repository code
+      uses: https://git.lab/actions/checkout@v4
+
+    - name: Dump environment variables
+      run: env
+    
+    - name: Login to Gitea Docker Registry
+      uses: https://git.lab/docker/login-action@v3
+      with:
+        registry: git.lab
+        username: ${{ secrets.GITEADOCKER_USERNAME }}
+        password: ${{ secrets.GITEADOCKER_TOKEN }}
+    
+    # Assumed that /opt/services is pre-created and owned by cicd.
+    # Assumed that cicd has run docker login on destination machine.
+    - name: Deploy system_manual image
+      run: |
+        ls && \
+        ssh -p 2222 -o StrictHostKeyChecking=no cicd@www.lab \
+          /bin/sh < rollout.sh
