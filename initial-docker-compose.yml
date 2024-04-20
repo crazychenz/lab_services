@@ -1,0 +1,10 @@
+# Compose v2.20.3+
+
+include:
+  # Primary Baseline Services
+  - services/dnsmasq_svc.yml
+  - services/caddy_certs_init.yml
+  - services/caddy_svc.yml
+  - services/vaultwarden_svc.yml
+  - services/gitea_svc.yml
+  - services/gitea_sys_runner.yml

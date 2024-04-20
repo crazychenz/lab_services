@@ -1,0 +1,28 @@
+  #&& wget --no-check-certificate https://tls.lab/certs/intermediate.crt \
+  #    -O /etc/ssl/certs/lab-intermediate.crt \
+  #    && cat /etc/ssl/certs/lab-intermediate.crt >> /etc/ssl/certs/ca-certificates.crt
+
+services:
+  gitea_sys_runner:
+    image: git.lab/lab/act_runner:latest
+    depends_on: [dnsmasq_svc, caddy_svc, gitea_svc]
+    build:
+      context: context
+      dockerfile_inline: |
+        FROM gitea/act_runner:latest-dind-rootless
+        USER root
+        RUN apk add -U nodejs
+        RUN wget --no-check-certificate https://tls.lab/certs/root.crt -O /etc/ssl/certs/lab-root.crt
+        RUN cat /etc/ssl/certs/lab-root.crt >> /etc/ssl/certs/ca-certificates.crt
+        USER rootless
+    container_name: gitea_sys_runner
+    # Required for docker in docker control.
+    privileged: true
+    environment:
+      - CONFIG_FILE=/data/config.yaml
+      - DOCKER_HOST=unix:///var/run/user/1000/docker.sock
+    # Consider an init container for the ssh keys
+    volumes:
+      - /opt/state/gitea_sys_runner/data:/data
+      - /opt/state/gitea_sys_runner/ssh:/home/rootless/.ssh
+    restart: unless-stopped

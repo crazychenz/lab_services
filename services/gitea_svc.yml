@@ -1,0 +1,14 @@
+services:
+  gitea_svc:
+    image: gitea/gitea:1.21.4
+    depends_on: [dnsmasq_svc, caddy_svc]
+    container_name: gitea_svc
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+    restart: unless-stopped
+    volumes:
+      - /opt/state/gitea_svc/data:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    ports: [ 127.0.0.1:1180:3000, "22:22" ]

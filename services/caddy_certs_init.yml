@@ -1,0 +1,44 @@
+services:
+  caddy_certs_init:
+    image: git.lab/lab/caddy:certs_init
+    container_name: caddy_certs_init
+    build: 
+      context: context
+      dockerfile_inline: |
+        FROM caddy:alpine
+        
+        # Execute Caddy's PKI application to create certificates.
+        COPY <<EOF /init-pki.sh
+        #!/bin/sh
+
+        # If certificates are valid, return success.
+        if [ -e /certs/root.key -a -e /certs/root.crt ]; then
+          echo "Found certificates."
+          exit 0
+        fi
+
+        echo "No certificates found, created them now."
+        # Start the server
+        caddy run &
+        TMP_CADDY_PID=\$!
+        # Wait for server to start
+        sleep 1
+        # Tell caddy to gen certs (and install them).
+        caddy trust
+        # Wait for server to create certificates
+        sleep 1
+        # Kill server
+        kill \$\{TMP_CADDY_PID\}
+        # Copy public certs to hosted folder 
+        mkdir -p /certs
+        cp /data/caddy/pki/authorities/local/* /certs/
+        # Return success
+        exit 0
+        EOF
+        # Set execute perm, execute, and remove the initialize PKI script.
+        RUN chmod +x /init-pki.sh
+
+        CMD ["/init-pki.sh"]
+    network_mode: host
+    volumes:
+      - /opt/state/caddy_certs_init/:/certs

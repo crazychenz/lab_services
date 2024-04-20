@@ -1,0 +1,11 @@
+services:
+  vaultwarden_svc:
+    image: vaultwarden/server:latest
+    depends_on: [dnsmasq_svc, caddy_svc]
+    container_name: vaultwarden_svc
+    restart: unless-stopped
+    environment:
+      DOMAIN: "https://words.lab"
+    ports: [127.0.0.1:1080:80, 127.0.0.1:3012:3012]
+    volumes:
+      - /opt/state/vaultwarden_svc/data:/data

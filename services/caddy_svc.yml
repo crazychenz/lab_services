@@ -1,0 +1,29 @@
+services:
+  caddy_svc:
+    image: git.lab/lab/caddy:initial
+    depends_on:
+      caddy_certs_init: { condition: service_completed_successfully }
+      dnsmasq_svc: { condition: service_started }
+    container_name: caddy_svc
+    build: 
+      context: context
+      dockerfile_inline: |
+        FROM caddy:alpine
+        
+        COPY Caddyfile /etc/caddy/Caddyfile
+        
+        # Build the container entrypoint
+        COPY <<EOF /start-caddy.sh
+        #!/bin/sh
+        mkdir -p /public/certs
+        cp /data/caddy/pki/authorities/local/*.crt /public/certs
+        caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+        EOF
+        RUN chmod +x /start-caddy.sh
+        CMD ["/start-caddy.sh"]
+
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - /opt/state/caddy_svc/config:/config
+      - /opt/state/caddy_certs_init:/data/caddy/pki/authorities/local

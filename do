@@ -2,14 +2,21 @@
 
 usage() {
   echo "Possible Targets:"
+  echo "- help - this help"
   echo "- start - docker compose up"
   echo "- stop - docker compose down"
   echo "- restart - stop & start"
   echo "- pull - repull images"
-  echo "- rollout - pull && start"
+  echo "- build - build all images"
+  echo "- initial - build & start initial services"
+  echo "- rollout - git-pull & pull & start"
   echo "- deploy - git checkout/merge/push in deploy"
   exit 1
 }
+
+NOKNOWNHOSTS="-o UserKnownHostsFile=/dev/null"
+NOHOSTCHECKS="-o StrictHostKeyChecking=no"
+export GIT_SSH_COMMAND="ssh $NOKNOWNHOSTS $NOHOSTCHECKS"
 
 if [ $# -lt 1 ]; then
   usage
@@ -35,9 +42,24 @@ case $DO_CMD in
   pull)
     docker compose pull
     ;;
+  
+  build)
+    docker compose build
+    ;;
+  
+  initial)
+    docker compose -f initial-docker-compose.yml build
+    docker compose -f initial-docker-compose.yml up -d
+    ;;
 
   rollout)
+    # Update any service descriptor updates.
+    git pull
+    # Note: You must manually do a docker login for
     ./do pull && ./do start
+    # Optional commands for cleaner (or more aggressive) maintenance.
+    # docker compose up --force-recreate --build -d
+    # docker image prune -f
     ;;
 
   deploy)

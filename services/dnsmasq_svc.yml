@@ -1,0 +1,24 @@
+services:
+  dnsmasq_svc:
+    image: git.lab/lab/dnsmasq:initial
+    depends_on: []
+    container_name: dnsmasq_svc
+    build:
+      context: context
+      dockerfile_inline: |
+        FROM alpine:3.19
+        RUN apk add -U dnsmasq
+    restart: unless-stopped
+    network_mode: host
+    dns:
+    - 9.9.9.9
+    - 1.1.1.1
+    dns_search: lab
+    extra_hosts:
+    - dockerhost:host-gateway
+    - git.lab:192.168.1.213
+    - words.lab:192.168.1.213
+    - dns.lab:192.168.1.213
+    - www.lab:192.168.1.213
+    - tls.lab:192.168.1.213
+    entrypoint: ["/usr/sbin/dnsmasq", "--no-daemon"]
