@@ -8,10 +8,10 @@ export GIT_SSH_COMMAND="ssh $NOKNOWNHOSTS $NOHOSTCHECKS"
 
 # Assumed that "cicd" user has write permissions to /opt/services
 cd /opt/services
-if [ ! -e system_services ]; then
+if [ ! -e lab_services-config ]; then
   git clone -b deploy git@git.lab:lab/lab_services-config.git
 fi
-if [ ! -e system_services ]; then
+if [ ! -e lab_services-config ]; then
   echo Failed to clone.
   exit 1
 fi
